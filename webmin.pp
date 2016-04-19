@@ -15,4 +15,10 @@ exec { 'download_webmin_install':
   cwd => "/root/",
   path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 }
+->
+exec { 'install_webmin':
+  command => 'dpkg --install webmin_1.791_all.deb',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
 
