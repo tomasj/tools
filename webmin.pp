@@ -1,11 +1,11 @@
 exec { 'update_apt':
-  command => 'apt-get update',
+  command => 'apt-get -y update',
   cwd => "/root/",
   path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 }
 ->
 exec { 'resolve_webmin_dependencies':
-  command => 'apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python',
+  command => 'apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python',
   cwd => "/root/",
   path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 }
