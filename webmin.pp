@@ -1,5 +1,7 @@
 # apt-get install puppet
 
+# --------------- install webmin
+
 exec { 'update_apt':
   command => 'apt-get -y update',
   cwd => "/root/",
@@ -24,6 +26,8 @@ exec { 'install_webmin':
   path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 }
 
+# --------------- add ssh key
+
 file{ '/root/.ssh/':
 	ensure => 'directory',
 }
@@ -33,3 +37,73 @@ file{ '/root/.ssh/authorized_keys':
     content => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCslNKgLyoOrGDerz9pA4a4Mc+EquVzX52AkJZz+ecFCYZ4XQjcg2BK1P9xYfWzzl33fHow6pV/C6QC3Fgjw7txUeH7iQ5FjRVIlxiltfYJH4RvvtXcjqjk8uVDhEcw7bINVKVIS856Qn9jPwnHIhJtRJe9emE7YsJRmNSOtggYk/MaV2Ayx+9mcYnA/9SBy45FPHjMlxntoOkKqBThWE7Tjym44UNf44G8fd+kmNYzGw9T5IKpH1E1wMR+32QJBobX6d7k39jJe8lgHdsUYMbeJOFPKgbWlnx9VbkZh+seMSjhroTgniHjUl8wBFgw0YnhJ/90MgJJL4BToxu9PVnH ondrej@ondrejsika.com',
     recurse => true,
 }
+
+# ----- puppet modules
+
+exec { 'puppet_module_1':
+  command => 'puppet module install puppetlabs-apache',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+exec { 'puppet_module_2':
+  command => 'puppet module install puppetlabs-postgresql',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+exec { 'puppet_module_3':
+  command => 'puppet module install puppetlabs-vcsrepo',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+exec { 'puppet_module_4':
+  command => 'puppet module install puppetlabs-nodejs',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+
+# ----- install phpPgAdmin + adminer
+
+exec { 'phpPgAdmin':
+  command => 'apt-get -y install php5-pgsql phppgadmin',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+->
+file{ '/etc/apache2/sites-available/admin.metrocar.jezdito.cz.conf':
+  ensure => 'present',
+  content => '
+      <VirtualHost *:80>
+        ServerName admin.metrocar.jezdito.cz
+
+        <Directory />
+                AllowOverride none
+                Require all granted
+        </Directory>
+
+        <Directory "/usr/share/phpPgAdmin">
+                AuthUserFile /etc/phpPgAdmin/.htpasswd
+                AuthName "Restricted Area"
+                AuthType Basic
+                require valid-user
+        </Directory>
+
+    </VirtualHost>',
+}
+->
+exec { 'a2ensite':
+  command => 'a2ensite admin.metrocar.jezdito.cz.conf',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+->
+exec { 'restart_apache':
+  command => 'service apache2 reload',
+  cwd => "/root/",
+  path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+}
+
+# exec { 'adminer':
+#   command => 'apt-get -y adminer',
+#   cwd => "/root/",
+#   path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+# }
