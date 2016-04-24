@@ -25,6 +25,8 @@ exec { 'install_webmin':
   cwd => "/root/",
   path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 }
+# for webmin restart use
+# /etc/init.d/webmin restart
 
 # --------------- add ssh key
 
@@ -74,20 +76,9 @@ file{ '/etc/apache2/sites-available/admin.metrocar.jezdito.cz.conf':
   content => '
       <VirtualHost *:80>
         ServerName admin.metrocar.jezdito.cz
-
-        <Directory />
-                AllowOverride none
-                Require all granted
-        </Directory>
-
-        <Directory "/usr/share/phpPgAdmin">
-                AuthUserFile /etc/phpPgAdmin/.htpasswd
-                AuthName "Restricted Area"
-                AuthType Basic
-                require valid-user
-        </Directory>
-
-    </VirtualHost>',
+        DocumentRoot /usr/share/phppgadmin
+        DirectoryIndex index.php
+      </VirtualHost>',
 }
 ->
 exec { 'a2ensite':
