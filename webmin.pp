@@ -81,6 +81,14 @@ file{ '/etc/apache2/sites-available/admin.metrocar.jezdito.cz.conf':
       </VirtualHost>',
 }
 ->
+file{ '/etc/apache2/conf-available/phppgadmin.conf':
+  ensure => 'absent',
+}
+->
+file{ '/etc/apache2/conf-enabled/phppgadmin.conf':
+  ensure => 'absent',
+}
+
 exec { 'a2ensite':
   command => 'a2ensite admin.metrocar.jezdito.cz.conf',
   cwd => "/root/",
