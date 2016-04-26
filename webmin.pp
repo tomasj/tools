@@ -88,7 +88,7 @@ file{ '/etc/apache2/conf-available/phppgadmin.conf':
 file{ '/etc/apache2/conf-enabled/phppgadmin.conf':
   ensure => 'absent',
 }
-
+->
 exec { 'a2ensite':
   command => 'a2ensite admin.metrocar.jezdito.cz.conf',
   cwd => "/root/",
